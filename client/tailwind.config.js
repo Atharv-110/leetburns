@@ -2,7 +2,13 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        minecraft: ["Minecraft", "sans-serif"],
+        "minecraft-bold": ["MinecraftBold", "sans-serif"],
+      },
+    },
   },
+  important: true,
   plugins: [],
 };
