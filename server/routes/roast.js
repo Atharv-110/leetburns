@@ -15,7 +15,7 @@ import {
 export const router = express.Router();
 
 // roast route
-router.get("/roast/:username", async (req, res) => {
+router.get("/:username", async (req, res) => {
   const { username } = req.params;
   const { year } = req.query;
 

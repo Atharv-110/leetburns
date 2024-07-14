@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import userRouter from "./routes/userInfo.js";
+import roastRouter from "./routes/roast.js";
 import errorRouter from "./routes/error.js";
 import configMainRoutes, { mainRouter } from "./routes/main.js";
 
@@ -15,7 +15,7 @@ configMainRoutes(app);
 
 app.use(cors(), bodyParser.json());
 
-app.use("/user", userRouter);
+app.use("/roast", roastRouter);
 
 app.use("/", mainRouter);
 
