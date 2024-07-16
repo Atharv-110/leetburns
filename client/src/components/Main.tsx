@@ -29,7 +29,7 @@ const Main = () => {
   };
 
   return (
-    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-4 md:mt-10">
+    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-6 md:mt-10">
       <LInput
         placeholder="Enter your leetcode username"
         icon={IMAGES.play}
