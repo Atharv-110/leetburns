@@ -1,4 +1,5 @@
 import { Button } from "pixel-retroui";
+import React from "react";
 
 interface LButtonProps {
   text: string;
@@ -30,4 +31,4 @@ const LButton = ({
   );
 };
 
-export default LButton;
+export default React.memo(LButton);

@@ -2,42 +2,57 @@ import { useState } from "react";
 import LInput from "../@ui/LInput";
 import { IMAGES } from "../assets";
 import { Card } from "pixel-retroui";
+import axios from "axios";
+import React from "react";
+import Loader from "./Loader";
 
 const Main = () => {
-  const [username, setUsername] = useState<string>("");
-  console.log(username);
+  const [username, setUsername] = useState<string | null>(null);
+  const [roastMessage, setRoastMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fetchResponse = async () => {
+    if (username) {
+      setLoading(true);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/${username}`
+      );
+      setRoastMessage(res.data.roast);
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      fetchResponse();
+    }
+  };
 
   return (
-    <section className="max-w-[720px] mx-auto flex flex-col items-center mt-10">
+    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-4 md:mt-10">
       <LInput
         placeholder="Enter your leetcode username"
         icon={IMAGES.play}
-        className="w-full text-sm"
+        className="w-full text-xs md:text-base"
         onChange={(e) => setUsername(e.target.value)}
+        onIconClick={fetchResponse}
+        onKeyDown={handleKeyDown}
       />
-      <Card shadowColor="black" className="w-full mt-10 bg-white p-4">
-        <p className="text-sm text-justify text-gray-800 tracking-wide">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque,
-          possimus est rem harum molestias unde odit in suscipit modi voluptates
-          magni ipsum dolorem! Dolorem necessitatibus quas, nostrum accusamus
-          dicta delectus rerum, quia ducimus earum vitae corporis amet labore
-          esse iusto architecto fugiat inventore quisquam quam totam eveniet
-          illum odio iste quidem. Sed doloribus, voluptates illum repellat
-          temporibus necessitatibus natus laudantium quos, eaque asperiores
-          fuga. Quidem voluptatibus culpa quod perspiciatis consequuntur
-          commodi, beatae quae eaque, omnis dolor aperiam assumenda aut,
-          delectus quos odit soluta ipsa nisi eveniet. Molestiae eveniet iure
-          quod impedit nihil fugiat, quidem blanditiis et neque fugit! Fugiat,
-          nostrum minima exercitationem harum quisquam reiciendis laboriosam
-          iusto molestiae, enim qui sunt architecto impedit. Dolor architecto
-          doloribus quaerat dolorem consectetur excepturi voluptates quas dolore
-          atque consequatur doloremque earum esse assumenda quis, labore
-          eligendi porro a magni est iste, adipisci corrupti perspiciatis
-          minima! At eligendi sequi aut facere sunt eum est maxime.
-        </p>
-      </Card>
+      {roastMessage && !loading ? (
+        <Card
+          shadowColor="#1f2937"
+          borderColor="#1f2937"
+          className="w-full mt-6 md:mt-10 bg-white p-1 md:px-4 md:py-2 max-h-[260px] md:max-h-[420px] overflow-hidden overflow-y-auto"
+        >
+          <p className="text-[0.75rem] md:text-[1rem] text-justify md:leading-[2rem]">
+            {roastMessage}
+          </p>
+        </Card>
+      ) : (
+        loading && <Loader />
+      )}
     </section>
   );
 };
 
-export default Main;
+export default React.memo(Main);

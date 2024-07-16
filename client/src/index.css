@@ -21,3 +21,8 @@
 body {
   font-family: "Minecraft", sans-serif;
 }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-[1px];
+}

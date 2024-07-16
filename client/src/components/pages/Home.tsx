@@ -1,3 +1,4 @@
+import React from "react";
 import Hero from "../Hero";
 import Main from "../Main";
 
@@ -10,4 +11,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default React.memo(HomePage);
