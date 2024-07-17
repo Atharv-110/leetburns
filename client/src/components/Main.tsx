@@ -5,20 +5,35 @@ import { Card } from "pixel-retroui";
 import axios from "axios";
 import React from "react";
 import Loader from "./Loader";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { setImageUrl } from "../redux/imageSlice";
 
 const Main = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [roastMessage, setRoastMessage] = useState<string | null>(null);
+  const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const fetchResponse = async () => {
+    dispatch(setImageUrl(null));
     if (username) {
+      setError(false);
       setLoading(true);
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/${username}`
-      );
-      setRoastMessage(res.data.roast);
-      setLoading(false);
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/${username}`
+        );
+        if (res.status == 200) {
+          setLoading(false);
+          dispatch(setImageUrl(res.data.userAvatar));
+          setRoastMessage(res.data.roast);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
     }
   };
 
@@ -29,7 +44,7 @@ const Main = () => {
   };
 
   return (
-    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-6 md:mt-10">
+    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-8 md:mt-10">
       <LInput
         placeholder="Enter your leetcode username"
         icon={IMAGES.play}
@@ -42,7 +57,7 @@ const Main = () => {
         <Card
           shadowColor="#1f2937"
           borderColor="#1f2937"
-          className="w-full mt-6 md:mt-10 bg-white p-1 md:px-4 md:py-2 max-h-[260px] md:max-h-[420px] overflow-hidden overflow-y-auto"
+          className="w-full mt-6 md:mt-10 bg-white p-1 md:px-4 md:py-2 max-h-[280px] md:max-h-[300px] overflow-hidden overflow-y-auto"
         >
           <p className="text-[0.75rem] md:text-[1rem] text-justify md:leading-[2rem]">
             {roastMessage}
@@ -50,6 +65,11 @@ const Main = () => {
         </Card>
       ) : (
         loading && <Loader />
+      )}
+      {error && (
+        <p className="mt-24 text-xs md:text-sm text-red-500 text-center">
+          Something went wrong! Even our servers rejected your profile.
+        </p>
       )}
     </section>
   );
