@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section className="mt-16 md:mt-10">
+    <section className="mt-12">
       <h1 className="text-center text-4xl md:text-6xl font-black tracking-widest">
         Leetburns
       </h1>

@@ -44,7 +44,7 @@ const Main = () => {
   };
 
   return (
-    <section className="max-w-[770px] mx-auto flex flex-col items-center mt-8 md:mt-10">
+    <section className="max-w-[800px] mx-auto flex flex-col items-center mt-8">
       <LInput
         placeholder="Enter your leetcode username"
         icon={IMAGES.play}
@@ -57,7 +57,7 @@ const Main = () => {
         <Card
           shadowColor="#1f2937"
           borderColor="#1f2937"
-          className="w-full mt-6 md:mt-10 bg-white p-1 md:px-4 md:py-2 max-h-[280px] md:max-h-[300px] overflow-hidden overflow-y-auto"
+          className="w-full mt-6 md:mt-8 bg-white p-1 md:px-4 md:py-2 max-sm:max-h-[300px] max-h-[280px] overflow-hidden overflow-y-auto"
         >
           <p className="text-[0.75rem] md:text-[1rem] text-justify md:leading-[2rem]">
             {roastMessage}
