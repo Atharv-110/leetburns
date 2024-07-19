@@ -19,7 +19,6 @@ export const rateLimiter = async (req, res, next) => {
   const userIp = req.headers["x-forwarded-for"] || req.ip;
   try {
     const record = await redisClient.get(userIp);
-    con;
     if (record) {
       const data = JSON.parse(record);
       const currentTime = Math.floor(Date.now() / 1000);
