@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import roastRouter from "./routes/roast.js";
+import { rateLimiter } from "./middlewares/limiter.middleware.js";
 import errorRouter from "./routes/error.js";
 import configMainRoutes, { mainRouter } from "./routes/main.js";
 
@@ -36,7 +37,7 @@ app.use(bodyParser.json());
 
 configMainRoutes(app);
 
-app.use("/roast", roastRouter);
+app.use("/roast", rateLimiter, roastRouter);
 app.use("/", mainRouter);
 app.use("*", errorRouter);
 
