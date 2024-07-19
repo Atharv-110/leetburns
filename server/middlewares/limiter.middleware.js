@@ -16,7 +16,7 @@ const RATE_LIMIT = 2;
 const TIME_WINDOW = 24 * 60 * 60;
 
 export const rateLimiter = async (req, res, next) => {
-  const userIp = req.headers["x-forwarded-for"] || req.ip;
+  const userIp = req.ip;
 
   try {
     const record = await redisClient.get(userIp);
