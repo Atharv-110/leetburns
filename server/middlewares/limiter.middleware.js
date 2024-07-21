@@ -1,7 +1,7 @@
 import { rateLimit } from "express-rate-limit";
 
 export const rateLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
+  windowMs: 60 * 1000,
   limit: 2,
   standardHeaders: "draft-7",
   keyGenerator: (req) => req.userUuid,
