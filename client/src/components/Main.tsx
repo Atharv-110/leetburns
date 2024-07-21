@@ -23,9 +23,10 @@ const Main = () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/${username}`
+          `${import.meta.env.VITE_API_BASE_URL}/${username}`,
+          { withCredentials: true } // Ensures cookies are sent with the request
         );
-        if (res.status == 200) {
+        if (res.status === 200) {
           setLoading(false);
           dispatch(setImageUrl(res.data.userAvatar));
           setRoastMessage(res.data.roast);

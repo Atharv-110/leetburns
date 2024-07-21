@@ -3,53 +3,68 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const redisClient = createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-  password: process.env.REDIS_PASSWORD,
-});
+const connectWithRetry = async () => {
+  const redisClient = createClient({
+    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+    password: process.env.REDIS_PASSWORD,
+    socket: {
+      connectTimeout: 10000, // 10 seconds
+      readTimeout: 10000, // 10 seconds
+    },
+  });
 
-redisClient.on("error", (err) => console.error("Redis Client Error", err));
+  redisClient.on("error", (err) => console.error("Redis Client Error", err));
 
-await redisClient.connect();
+  while (true) {
+    try {
+      await redisClient.connect();
+      console.log("Connected to Redis");
+      return redisClient;
+    } catch (error) {
+      console.error("Failed to connect to Redis. Retrying in 5 seconds...");
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // Retry after 5 seconds
+    }
+  }
+};
+
+const redisClient = await connectWithRetry();
 
 const RATE_LIMIT = 2;
-const TIME_WINDOW = 24 * 60 * 60;
+const TIME_WINDOW = 24 * 60 * 60; // 24 hours
 
 export const rateLimiter = async (req, res, next) => {
-  const userIp = req.headers["x-forwarded-for"] || req.ip;
+  const userUuid = req.userUuid; // Get UUID from the request object
+  const currentTime = Math.floor(Date.now() / 1000);
 
-  console.log("uuid: ", req.cookies.uuid);
   try {
-    const record = await redisClient.get(userIp);
+    const record = await redisClient.get(userUuid);
     if (record) {
       const data = JSON.parse(record);
-      const currentTime = Math.floor(Date.now() / 1000);
 
       if (currentTime - data.startTime < TIME_WINDOW) {
         if (data.count >= RATE_LIMIT) {
           return res.status(429).json({
             message: "Rate limit exceeded. Try again after 24 hours.",
           });
-        } else {
-          data.count += 1;
-          await redisClient.set(userIp, JSON.stringify(data), {
-            EX: TIME_WINDOW,
-          });
         }
+        data.count += 1;
       } else {
-        await redisClient.set(
-          userIp,
-          JSON.stringify({ count: 1, startTime: currentTime }),
-          { EX: TIME_WINDOW }
-        );
+        data.count = 1;
+        data.startTime = currentTime;
       }
-    } else {
-      const startTime = Math.floor(Date.now() / 1000);
-      await redisClient.set(userIp, JSON.stringify({ count: 1, startTime }), {
+
+      await redisClient.set(userUuid, JSON.stringify(data), {
         EX: TIME_WINDOW,
       });
+    } else {
+      await redisClient.set(
+        userUuid,
+        JSON.stringify({ count: 1, startTime: currentTime }),
+        {
+          EX: TIME_WINDOW,
+        }
+      );
     }
-
     next();
   } catch (error) {
     console.error("Rate limiting error:", error);
