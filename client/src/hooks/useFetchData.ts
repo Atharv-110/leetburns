@@ -22,7 +22,7 @@ const useFetchData = () => {
       if (!username) {
         return;
       }
-
+      dispatch(setImageUrl(null));
       setLoading(true);
       setError({ state: false, message: null });
       setRoastMessage(null);

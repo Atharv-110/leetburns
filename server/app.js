@@ -2,12 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
 import roastRouter from "./routes/roast.js";
 import errorRouter from "./routes/error.js";
 import configMainRoutes, { mainRouter } from "./routes/main.js";
 import { rateLimiter } from "./middlewares/limiter.middleware.js";
-import { uuidMiddleware } from "./middlewares/uuid.middleware.js";
 import corsOptions from "./config/cors.config.js";
 
 dotenv.config();
@@ -19,8 +17,6 @@ configMainRoutes(app);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(uuidMiddleware);
 app.use("/roast", rateLimiter, roastRouter);
 app.use("/", mainRouter);
 app.use("*", errorRouter);
