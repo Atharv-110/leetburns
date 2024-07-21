@@ -8,7 +8,7 @@ export const uuidMiddleware = (req, res, next) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      maxAge: 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
     });
   }
   req.userUuid = userUuid;
