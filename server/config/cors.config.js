@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const allowedOrigins = [
   process.env.LOCAL_ALLOWED_URL,
-  process.env.STAGED_ALLOWED_UR,
+  process.env.STAGED_ALLOWED_URL,
 ];
 
 const corsOptions = {
