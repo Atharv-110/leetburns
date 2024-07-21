@@ -17,12 +17,8 @@ const TIME_WINDOW = 24 * 60 * 60;
 
 export const rateLimiter = async (req, res, next) => {
   const userIp = req.headers["x-forwarded-for"] || req.ip;
-  if (req.headers["x-forwarded-for"]) {
-    console.log("forwarded for: ", req.headers["x-forwarded-for"]);
-  } else {
-    console.log("reqIP", req.ip);
-  }
-  console.log("user Ip: ", userIp);
+
+  console.log("uuid: ", req.cookies.uuid);
   try {
     const record = await redisClient.get(userIp);
     if (record) {
