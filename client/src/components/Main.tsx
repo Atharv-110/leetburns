@@ -12,14 +12,20 @@ import { setImageUrl } from "../redux/imageSlice";
 const Main = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [roastMessage, setRoastMessage] = useState<string | null>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<{
+    state: boolean;
+    message: string | null;
+  }>({
+    state: false,
+    message: null,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const fetchResponse = async () => {
     dispatch(setImageUrl(null));
     if (username) {
-      setError(false);
+      setError({ state: false, message: "" });
       setLoading(true);
       try {
         const res = await axios.get(
@@ -33,7 +39,7 @@ const Main = () => {
         }
       } catch (error) {
         setLoading(false);
-        setError(true);
+        setError({ state: false, message: "" });
       }
     }
   };
@@ -67,7 +73,7 @@ const Main = () => {
       ) : (
         loading && <Loader />
       )}
-      {error && (
+      {error.state && (
         <p className="mt-24 text-xs md:text-sm text-red-500 text-center">
           Something went wrong! Even our servers rejected your profile.
         </p>
