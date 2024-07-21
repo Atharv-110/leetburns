@@ -7,6 +7,8 @@ import errorRouter from "./routes/error.js";
 import configMainRoutes, { mainRouter } from "./routes/main.js";
 import { rateLimiter } from "./middlewares/limiter.middleware.js";
 import corsOptions from "./config/cors.config.js";
+import { uuidMiddleware } from "./middlewares/uuid.middleware.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ configMainRoutes(app);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(uuidMiddleware);
 app.use("/roast", rateLimiter, roastRouter);
 app.use("/", mainRouter);
 app.use("*", errorRouter);
