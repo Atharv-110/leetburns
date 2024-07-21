@@ -6,7 +6,7 @@ export const uuidMiddleware = (req, res, next) => {
     userUuid = uuidv4();
     res.cookie("uuid", userUuid, {
       httpOnly: true,
-      maxAge: 1 * 60 * 1000,
+      maxAge: 60 * 1000,
     });
   }
   req.userUuid = userUuid;
