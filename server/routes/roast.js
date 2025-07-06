@@ -11,6 +11,7 @@ import {
   userBadgesQuery,
   userCalendarQuery,
 } from "../queries/userGraphqlQueries.js";
+import users from "../models/users.js";
 
 export const router = express.Router();
 
@@ -35,6 +36,14 @@ router.get("/:username", async (req, res) => {
       badges: badgesData,
       calendar: calendarData,
     };
+    await users.updateOne(
+      { username },
+      {
+        $inc: { requests: 1 },
+        $setOnInsert: { username },
+      },
+      { upsert: true }
+    );
 
     const promptData = useableData(combinedData);
     const gptResponse = await generateRoastData(promptData);

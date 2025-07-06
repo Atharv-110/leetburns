@@ -11,14 +11,14 @@ const Navbar = () => {
       {imageUrl ? (
         <div className="w-[60px] md:w-[65px] h-full relative">
           <img
-            src={IMAGES.frame}
+            src={IMAGES.fireFrameGif}
             alt="frame"
             className="absolute z-50 w-full left-0 right-0 bottom-0 top-0 m-auto"
           />
           <img
             src={imageUrl}
             alt="avatar"
-            className="absolute p-1 left-0 right-0 bottom-0 top-0 m-auto bg-slate-100"
+            className="absolute p-1 left-0 right-0 bottom-0 top-0 m-auto bg-slate-100 rounded-xl"
           />
         </div>
       ) : (

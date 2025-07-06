@@ -1,6 +1,5 @@
 import path from "path";
 
-// Function to clean up the regex path
 const getPathFromRegex = (regexp) => {
   return regexp
     .toString()
@@ -10,7 +9,6 @@ const getPathFromRegex = (regexp) => {
     .replace("(?:/(?=$))", "");
 };
 
-// Function to combine stack routes
 const combineStacks = (acc, stack) => {
   if (stack.handle && stack.handle.stack) {
     const routerPath = getPathFromRegex(stack.regexp);
@@ -31,7 +29,6 @@ const getStacks = (app) => {
   return [];
 };
 
-// Function to list routes
 export const expressListRoutes = (app, opts) => {
   const stacks = getStacks(app);
   const options = { prefix: "", ...opts };
@@ -63,7 +60,6 @@ export const expressListRoutes = (app, opts) => {
   return paths;
 };
 
-// Function to get all routes
 export const allRoutes = (app) =>
   expressListRoutes(app)
     .map((x) => {
