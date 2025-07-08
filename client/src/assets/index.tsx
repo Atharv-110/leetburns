@@ -3,6 +3,7 @@ import Play from "./play.svg";
 import FireGif from "./fire.gif";
 import Heart from "./heart.svg";
 import FireFrameGif from "./frame.gif";
+import Download from "./download.svg";
 
 export const IMAGES = {
   logo: Logo,
@@ -10,4 +11,5 @@ export const IMAGES = {
   fireGif: FireGif,
   fireFrameGif: FireFrameGif,
   heart: Heart,
+  download: Download,
 };

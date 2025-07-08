@@ -12,6 +12,7 @@ import {
   userCalendarQuery,
 } from "../queries/userGraphqlQueries.js";
 import users from "../models/users.js";
+import { getUserStats } from "../utils/userUtils.js";
 
 export const router = express.Router();
 
@@ -36,6 +37,11 @@ router.get("/:username", async (req, res) => {
       badges: badgesData,
       calendar: calendarData,
     };
+
+    const promptData = useableData(combinedData);
+    const gptResponse = await generateRoastData(promptData);
+
+    console.log("> Updating DB with roast request for user:", username);
     await users.updateOne(
       { username },
       {
@@ -45,10 +51,11 @@ router.get("/:username", async (req, res) => {
       { upsert: true }
     );
 
-    const promptData = useableData(combinedData);
-    const gptResponse = await generateRoastData(promptData);
+    const userStats = await getUserStats();
 
-    res.json({ roast: gptResponse, userAvatar: promptData.avatar });
+    res
+      .status(200)
+      .json({ roast: gptResponse, userAvatar: promptData.avatar, userStats });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

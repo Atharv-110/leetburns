@@ -1,37 +1,60 @@
 import React from "react";
-import LButton from "../@ui/LButton";
 import { IMAGES } from "../assets";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useUserStats } from "../hooks/useUserStats";
+import { Card } from "pixel-retroui";
+import Loader from "./Loader";
 
 const Navbar = () => {
   const imageUrl = useSelector((state: RootState) => state.image.imageUrl);
+  const { stats, loading, error } = useUserStats();
+
   return (
-    <nav className="flex items-center pt-5 pb-3 justify-between">
+    <nav className="flex items-center p-4 justify-between">
       {imageUrl ? (
-        <div className="w-[70px] md:w-[75px] h-full relative">
+        <div className="w-[65px] md:w-[70px] h-fit relative">
           <img
             src={IMAGES.fireFrameGif}
             alt="frame"
-            className="absolute z-50 w-full left-0 right-0 bottom-0 -top-3 rounded-b-3xl m-auto"
+            className="absolute z-50 w-full left-0 right-0 bottom-0 top-0 rounded-b-2xl m-auto"
           />
           <img
             src={imageUrl}
             alt="avatar"
-            className="w-[55px] md:w-[60px] absolute left-0 right-0 bottom-0 top-0 m-auto bg-slate-100 rounded-t-xl rounded-b-3xl border-2 border-black"
+            className="w-[55px] md:w-[60px] absolute left-0 right-0 -bottom-1 top-0 m-auto bg-slate-100 rounded-t-xl rounded-b-3xl border-2 border-black opacity-90"
           />
         </div>
       ) : (
         <img src={IMAGES.logo} alt="logo" className="w-[50px]" />
       )}
-
-      <LButton
-        text="GitHub"
-        bg="#fff"
-        onClick={() => window.open("https://github.com/Atharv-110")}
-      />
+      <div className="flex items-center gap-x-px">
+        <Card
+          shadowColor="#1f2937"
+          borderColor="#1f2937"
+          className="w-fit text-xs sm:text-sm"
+        >
+          Total Users
+        </Card>
+        <Card
+          shadowColor="#1f2937"
+          borderColor="#1f2937"
+          className="w-fit text-xs sm:text-sm font-bold text-orange-500"
+        >
+          {loading || error ? (
+            <Loader
+              showMessage={false}
+              baseClasses="mt-0"
+              iconClasses="w-4 sm:w-5"
+            />
+          ) : (
+            stats?.totalRequests
+          )}
+        </Card>
+      </div>
     </nav>
   );
 };
 
-export default React.memo(Navbar);
+const MemoizedNavbar = React.memo(Navbar);
+export default MemoizedNavbar;

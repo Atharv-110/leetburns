@@ -4,11 +4,12 @@ import Main from "../Main";
 
 const HomePage = () => {
   return (
-    <div className="flex-1 flex flex-col justify-start">
+    <div className="flex flex-col justify-start">
       <Hero />
       <Main />
     </div>
   );
 };
 
-export default React.memo(HomePage);
+const MemoizedHomePage = React.memo(HomePage);
+export default MemoizedHomePage;

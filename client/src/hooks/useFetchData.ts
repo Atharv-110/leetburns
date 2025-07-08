@@ -29,7 +29,7 @@ const useFetchData = () => {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/${username}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/roast/${username}`,
           {
             withCredentials: true,
           }

@@ -10,7 +10,7 @@ const Footer = () => {
       </span>
       by
       <a
-        href="https://www.atharv110.tech/"
+        href="https://github.com/Atharv-110"
         target="_blank"
         className="ml-2 underline underline-offset-1 hover:scale-90"
       >

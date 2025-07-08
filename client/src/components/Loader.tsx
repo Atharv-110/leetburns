@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { IMAGES } from "../assets";
+import { twMerge } from "tailwind-merge";
 
-const Loader = () => {
+interface LoaderProps {
+  baseClasses?: string;
+  iconClasses?: string;
+  showMessage?: boolean;
+}
+
+const Loader: React.FC<LoaderProps> = ({
+  baseClasses,
+  iconClasses,
+  showMessage = true,
+}) => {
   const loaderMessages: string[] = [
     "Hang on! We're roasting your LeetCode stats.",
     "Wait! Our server needs a laugh too",
@@ -20,13 +31,20 @@ const Loader = () => {
     return () => clearInterval(interval);
   }, [loaderMessages.length]);
   return (
-    <div className="w-full mt-20">
-      <img src={IMAGES.fireGif} alt="" className="w-24 md:w-36 mx-auto" />
-      <p className="text-center text-[0.7rem] md:text-xs leading-normal mt-1 text-gray-750">
-        {loaderMessages[currentMessageIndex]}
-      </p>
+    <div className={twMerge("w-full mt-20", baseClasses)}>
+      <img
+        src={IMAGES.fireGif}
+        alt=""
+        className={twMerge("w-24 sm:w-36 mx-auto", iconClasses)}
+      />
+      {showMessage && (
+        <p className="text-center text-[0.7rem] md:text-xs leading-normal mt-1 text-gray-750">
+          {loaderMessages[currentMessageIndex]}
+        </p>
+      )}
     </div>
   );
 };
 
-export default React.memo(Loader);
+const MemoizedLoader = React.memo(Loader);
+export default MemoizedLoader;

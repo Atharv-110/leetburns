@@ -7,6 +7,7 @@ const LeetburnsUserSchema = new mongoose.Schema(
       required: true,
       unique: true,
       index: true,
+      lowercase: true,
     },
     requests: {
       type: Number,

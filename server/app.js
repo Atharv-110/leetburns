@@ -10,6 +10,7 @@ import corsOptions from "./config/cors.config.js";
 import { uuidMiddleware } from "./middlewares/uuid.middleware.js";
 import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js";
+import userRouter from "./routes/user.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(uuidMiddleware);
-app.use("/roast", rateLimiter, roastRouter);
+app.use("/api/roast", rateLimiter, roastRouter);
+app.use("/api", userRouter);
 app.use("/", mainRouter);
 app.use("*", errorRouter);

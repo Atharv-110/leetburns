@@ -31,4 +31,5 @@ const LInput = ({
   );
 };
 
-export default React.memo(LInput);
+const MemoizedLInput = React.memo(LInput);
+export default MemoizedLInput;
