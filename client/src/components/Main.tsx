@@ -50,7 +50,7 @@ const Main = () => {
           onIconClick={() => username && fetchUserData(username)}
           onKeyDown={handleKeyDown}
         />
-        {roastMessage && (
+        {roastMessage && !loading && (
           <img
             role="button"
             src={IMAGES.download}
