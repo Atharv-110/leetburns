@@ -3,9 +3,9 @@ import { IMAGES } from "../assets";
 
 const Footer = () => {
   return (
-    <div className="absolute w-full bottom-0 left-0 text-xs md:text-sm text-center pb-2.5 flex items-center justify-center tracking-widest">
+    <div className="absolute w-full bottom-0 left-0 text-xs sm:text-sm text-center pb-2.5 flex items-center justify-center tracking-widest">
       Made with
-      <span className="w-4 md:w-5 mx-2 md:mx-3">
+      <span className="w-4 sm:w-5 mx-2 sm:mx-3">
         <img src={IMAGES.heart} alt="" className="w-full" />
       </span>
       by

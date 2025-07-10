@@ -38,7 +38,7 @@ const Loader: React.FC<LoaderProps> = ({
         className={twMerge("w-24 sm:w-36 mx-auto", iconClasses)}
       />
       {showMessage && (
-        <p className="text-center text-[0.7rem] md:text-xs leading-normal mt-1 text-gray-750">
+        <p className="text-center text-[0.7rem] sm:text-xs leading-normal mt-1 text-gray-750">
           {loaderMessages[currentMessageIndex]}
         </p>
       )}

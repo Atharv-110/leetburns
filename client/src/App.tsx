@@ -6,7 +6,7 @@ const App = () => {
   return (
     <main
       id="image-node"
-      className="relative w-full h-[100dvh] bg-slate-100  bg-[linear-gradient(90deg,#21252910_1px,transparent_0),linear-gradient(180deg,#21252910_1px,transparent_0)] bg-[size:28px_28px] md:px-10 px-4"
+      className="relative w-full h-[100dvh] bg-slate-100  bg-[linear-gradient(90deg,#21252910_1px,transparent_0),linear-gradient(180deg,#21252910_1px,transparent_0)] bg-[size:28px_28px] sm:px-10 px-3"
     >
       <Navbar />
       <HomePage />

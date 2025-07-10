@@ -16,36 +16,61 @@ const Main = () => {
     handleKeyDown,
     fetchUserData,
   } = useFetchData();
+  const cardRef = React.useRef<HTMLDivElement>(null);
   const downloadImage = () => {
-    const node = document.getElementById("image-node") as HTMLElement;
-    const downloadBtn = node.querySelector("#download-btn") as HTMLElement;
-    downloadBtn.style.display = "none";
-    if (node) {
-      htmlToImage
-        .toPng(node)
-        .then((dataUrl) => {
-          console.log("Image URL:", dataUrl);
+    const node = document.getElementById("image-node") as HTMLElement | null;
+    if (!node) return;
 
-          const link = document.createElement("a");
-          link.download = `${username}.png`;
-          link.href = dataUrl;
-          link.click();
-        })
-        .catch((err) => {
-          console.error("oops, something went wrong!", err);
-        })
-        .finally(() => {
-          downloadBtn.style.display = "";
-        });
+    const downloadBtn = node.querySelector(
+      "#download-btn"
+    ) as HTMLElement | null;
+    const cardEl = cardRef.current?.querySelector("div");
+    const cardPEl = cardEl?.querySelector("p");
+
+    // Temporarily hide the download button to prevent it from appearing in the image
+    if (downloadBtn) downloadBtn.style.display = "none";
+
+    const { height: nodeHeight, width: nodeWidth } =
+      node.getBoundingClientRect();
+    const shouldResize = nodeHeight < 675 || nodeWidth < 1200;
+
+    if (shouldResize) {
+      node.classList.add("h-[575px]", "w-[1200px]");
+      cardPEl?.classList.add("leading-loose");
     }
+
+    cardEl?.classList.add("max-h-full", "overflow-hidden");
+
+    htmlToImage
+      .toPng(node, { pixelRatio: 3 })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `${username}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error("Failed to generate image:", err);
+      })
+      .finally(() => {
+        // Restore all temporary styles
+        if (downloadBtn) downloadBtn.style.display = "";
+        cardEl?.classList.remove("max-h-full", "overflow-hidden");
+
+        if (shouldResize) {
+          node.classList.remove("h-[575px]", "w-[1200px]");
+          cardPEl?.classList.remove("leading-loose");
+        }
+      });
   };
+
   return (
-    <section className="max-w-4xl w-full mx-auto flex flex-col items-center mt-8">
-      <div className="w-full flex items-stretch gap-x-4">
+    <section className="max-w-4xl w-full mx-auto flex flex-col items-center mt-4 sm:mt-8">
+      <div className="w-full flex items-stretch gap-x-2 sm:gap-x-4">
         <LInput
           placeholder="Enter your leetcode username"
           icon={IMAGES.play}
-          className="flex-1 text-xs md:text-base"
+          className="flex-1 text-xs sm:text-base"
           onChange={(e) => setUsername(e.target.value)}
           onIconClick={() => username && fetchUserData(username)}
           onKeyDown={handleKeyDown}
@@ -55,27 +80,29 @@ const Main = () => {
             role="button"
             src={IMAGES.download}
             id="download-btn"
-            className="w-10 cursor-pointer"
+            className="w-7 sm:w-8 cursor-pointer hover:scale-90"
             onClick={() => downloadImage()}
             alt="download"
           />
         )}
       </div>
       {roastMessage && !loading ? (
-        <Card
-          shadowColor="#1f2937"
-          borderColor="#1f2937"
-          className="w-full mt-6 max-h-[300px] sm:max-h-[450px] bg-white p-2 overflow-hidden overflow-y-auto"
-        >
-          <p className="text-xs md:text-base text-justify leading-relaxed md:leading-loose whitespace-pre-line">
-            {roastMessage}
-          </p>
-        </Card>
+        <div ref={cardRef} className="w-full mt-4 sm:mt-6">
+          <Card
+            shadowColor="#1f2937"
+            borderColor="#1f2937"
+            className="max-h-[350px] sm:max-h-[450px] bg-white p-2 overflow-hidden overflow-y-auto"
+          >
+            <p className="text-xs sm:text-base text-justify leading-relaxed sm:leading-loose whitespace-pre-line">
+              {roastMessage}
+            </p>
+          </Card>
+        </div>
       ) : (
         loading && <Loader />
       )}
       {error.state && (
-        <p className="mt-24 text-xs md:text-sm text-red-500 text-center">
+        <p className="mt-24 text-xs sm:text-sm text-red-500 text-center">
           {error?.message}
         </p>
       )}

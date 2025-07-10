@@ -11,9 +11,9 @@ const Navbar = () => {
   const { stats, loading, error } = useUserStats();
 
   return (
-    <nav className="flex items-center p-4 justify-between">
+    <nav className="flex items-center py-4 sm:p-4 justify-between">
       {imageUrl ? (
-        <div className="w-[65px] md:w-[70px] h-fit relative">
+        <div className="w-12 sm:w-[70px] h-fit relative">
           <img
             src={IMAGES.fireFrameGif}
             alt="frame"
@@ -22,11 +22,11 @@ const Navbar = () => {
           <img
             src={imageUrl}
             alt="avatar"
-            className="w-[55px] md:w-[60px] absolute left-0 right-0 -bottom-1 top-0 m-auto bg-slate-100 rounded-t-xl rounded-b-3xl border-2 border-black opacity-90"
+            className="w-10 sm:w-[60px] absolute left-0 right-0 -bottom-1 top-0 m-auto bg-slate-100 rounded-t-xl rounded-b-3xl border-2 border-black opacity-90"
           />
         </div>
       ) : (
-        <img src={IMAGES.logo} alt="logo" className="w-[50px]" />
+        <img src={IMAGES.logo} alt="logo" className="w-12 sm:w-[50px]" />
       )}
       <div className="flex items-center gap-x-px">
         <Card
