@@ -26,7 +26,7 @@ const Navbar = () => {
           />
         </div>
       ) : (
-        <img src={IMAGES.logo} alt="logo" className="w-12 sm:w-[50px]" />
+        <img src={IMAGES.logo} alt="logo" className="w-12" />
       )}
       <div className="flex items-center gap-x-px">
         <Card
