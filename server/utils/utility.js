@@ -61,8 +61,12 @@ export const generateRoastData = async (useableData) => {
   //   model: "gpt-3.5-turbo-0125",
   // });
 
-  return response.text;
+  return sanitizeGeneratedText(response.text);
 };
+
+function sanitizeGeneratedText(input) {
+  return input.replace(/\n{2,}/g, "\n");
+}
 
 export const useableData = (combinedData) => {
   return {

@@ -29,16 +29,11 @@ const Navbar = () => {
         <img src={IMAGES.logo} alt="logo" className="w-12" />
       )}
       <div className="flex items-center gap-x-px">
-        <Card
-          shadowColor="#1f2937"
-          borderColor="#1f2937"
-          className="w-fit text-xs sm:text-sm"
-        >
+        <Card shadowColor="none" className="w-fit text-xs sm:text-sm">
           Total Users
         </Card>
         <Card
-          shadowColor="#1f2937"
-          borderColor="#1f2937"
+          shadowColor="none"
           className="w-fit text-xs sm:text-sm font-bold text-orange-500"
         >
           {loading || error ? (

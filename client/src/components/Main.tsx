@@ -17,55 +17,52 @@ const Main = () => {
     fetchUserData,
   } = useFetchData();
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const mainRef = React.useRef<HTMLDivElement>(null);
   const downloadImage = () => {
-    const node = document.getElementById("image-node") as HTMLElement | null;
-    if (!node) return;
-
-    const downloadBtn = node.querySelector(
-      "#download-btn"
-    ) as HTMLElement | null;
+    const node = document.getElementById("image-node") as HTMLElement;
+    const downloadBtn = node.querySelector("#download-btn") as HTMLElement;
     const cardEl = cardRef.current?.querySelector("div");
     const cardPEl = cardEl?.querySelector("p");
 
-    // Temporarily hide the download button to prevent it from appearing in the image
-    if (downloadBtn) downloadBtn.style.display = "none";
-
-    const { height: nodeHeight, width: nodeWidth } =
-      node.getBoundingClientRect();
-    const shouldResize = nodeHeight < 675 || nodeWidth < 1200;
-
-    if (shouldResize) {
-      node.classList.add("h-[575px]", "w-[1200px]");
-      cardPEl?.classList.add("leading-loose");
-    }
-
+    downloadBtn.style.display = "none";
+    const nodeDimensions = node.getBoundingClientRect();
+    //const nodeHeight = nodeDimensions.height;
+    const nodeWidth = nodeDimensions.width;
+    cardPEl?.classList.add("leading-loose");
     cardEl?.classList.add("max-h-full", "overflow-hidden");
-
-    htmlToImage
-      .toPng(node, { pixelRatio: 3 })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = `${username}.png`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error("Failed to generate image:", err);
-      })
-      .finally(() => {
-        // Restore all temporary styles
-        if (downloadBtn) downloadBtn.style.display = "";
-        cardEl?.classList.remove("max-h-full", "overflow-hidden");
-
-        if (shouldResize) {
-          node.classList.remove("h-[575px]", "w-[1200px]");
+    if (nodeWidth < 768) {
+      node.classList.remove("w-full");
+      node.classList.add("h-[600px]", "w-[1080px]");
+    }
+    if (node) {
+      htmlToImage
+        .toPng(node, { pixelRatio: 2 })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = `${username}.png`;
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.error("oops, something went wrong!", err);
+        })
+        .finally(() => {
+          downloadBtn.style.display = "";
+          cardEl?.classList.remove("max-h-full", "overflow-hidden");
           cardPEl?.classList.remove("leading-loose");
-        }
-      });
+          if (nodeWidth < 768) {
+            node.classList.remove("h-[600px]", "w-[1080px]");
+            node.classList.add("w-full");
+          }
+        });
+    }
   };
 
   return (
-    <section className="max-w-4xl w-full mx-auto flex flex-col items-center mt-4 sm:mt-8">
+    <section
+      ref={mainRef}
+      className="max-w-4xl w-full mx-auto flex flex-col items-center mt-4 sm:mt-8"
+    >
       <div className="w-full flex items-stretch gap-x-2 sm:gap-x-4">
         <LInput
           placeholder="Enter your leetcode username"
@@ -89,8 +86,7 @@ const Main = () => {
       {roastMessage && !loading ? (
         <div ref={cardRef} className="w-full mt-4 sm:mt-6">
           <Card
-            shadowColor="#1f2937"
-            borderColor="#1f2937"
+            shadowColor="none"
             className="max-h-[350px] sm:max-h-[450px] bg-white p-2 overflow-hidden overflow-y-auto"
           >
             <p className="text-xs sm:text-base text-justify leading-relaxed sm:leading-loose whitespace-pre-line">
