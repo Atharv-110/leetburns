@@ -1,5 +1,5 @@
 // hooks/useUserStats.ts
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios, { isAxiosError } from "axios";
 
 export interface UserStats {
@@ -12,28 +12,28 @@ export const useUserStats = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await axios.get<UserStats>(
-          `${import.meta.env.VITE_API_BASE_URL}/api/users/stats`
-        );
-        setStats(response.data);
-      } catch (err: unknown) {
-        if (isAxiosError(err)) {
-          if (err.response?.status === 429) {
-            setError("Rate limit exceeded. Please try again later.");
-          } else {
-            setError(err.response?.data?.message || "Failed to fetch stats");
-          }
+  const fetchStats = useCallback(async () => {
+    try {
+      const response = await axios.get<UserStats>(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/stats`
+      );
+      setStats(response.data);
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        if (err.response?.status === 429) {
+          setError("Rate limit exceeded. Please try again later.");
+        } else {
+          setError(err.response?.data?.message || "Failed to fetch stats");
         }
-      } finally {
-        setLoading(false);
       }
-    };
-
-    fetchStats();
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { stats, loading, error };
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
+
+  return { stats, loading, error, refetch: fetchStats };
 };

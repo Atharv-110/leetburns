@@ -8,7 +8,13 @@ import Loader from "./Loader";
 
 const Navbar = () => {
   const imageUrl = useSelector((state: RootState) => state.image.imageUrl);
-  const { stats, loading, error } = useUserStats();
+  const { stats, loading, error, refetch } = useUserStats();
+
+  React.useEffect(() => {
+    if (imageUrl) {
+      refetch();
+    }
+  }, [imageUrl, refetch]);
 
   return (
     <nav className="flex items-center py-4 sm:p-4 justify-between">
